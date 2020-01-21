@@ -26,7 +26,7 @@ from .. import utils
 
 logger = logging.getLogger(__name__)
 
-class LogColor:  # like an enum but we don't want the conversion of fields to instances of the enum type
+class LogColor:	 # like an enum but we don't want the conversion of fields to instances of the enum type
 	__slots__ = ()
 
 	_discord_color = lambda *hsv: discord.Color.from_hsv(*(component / 100 for component in hsv))
@@ -110,17 +110,15 @@ class Logger(commands.Cog):
 
 	async def log_emote_action(self, *, event, emote, title=None, by: discord.User = None):
 		e = discord.Embed()
-		author = utils.format_user(self.bot, emote.author, mention=True)
-		e.description = (
-			f'{emote.with_linked_name(separator="—")}\n'
-			f'Owner: {author}')
-		if by:
-			e.description += f'\nAction taken by: {by.mention}'
-
-		e.set_footer(text='Emote originally created')
-		e.timestamp = emote.created
-		e.color = getattr(LogColor, event)
 		e.title = title or event.title()
+		e.colour = getattr(LogColor, event)
+		e.description = f'[{emote.name}]({emote.url})'
+		e.timestamp = emote.created
+		e.set_thumbnail(url=emote.url)
+		e.add_field(name='Owner', value=utils.format_user(self.bot,
+			emote.author, mention=True))
+		if by:
+			e.add_field(name='Action taken by', value=by.mention, inline=False)
 
 		return await self._log(event=event, nsfw=emote.is_nsfw, embed=e)
 
