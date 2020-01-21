@@ -115,7 +115,7 @@ class Logger(commands.Cog):
 		e.description = f'[{emote.name}]({emote.url})'
 		e.timestamp = emote.created
 		e.set_thumbnail(url=emote.url)
-		e.set_thumbnail(text='Originally created')
+		e.set_footer(text='Originally created')
 		e.add_field(name='Owner', value=utils.format_user(self.bot,
 			emote.author, mention=True))
 		if by:
