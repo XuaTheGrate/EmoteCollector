@@ -26,7 +26,7 @@ from .. import utils
 
 logger = logging.getLogger(__name__)
 
-class LogColor: # like an enum but we don't want the conversion of fields to instances of the enum type
+class LogColor:  # like an enum but we don't want the conversion of fields to instances of the enum type
 	__slots__ = ()
 
 	_discord_color = lambda *hsv: discord.Color.from_hsv(*(component / 100 for component in hsv))
