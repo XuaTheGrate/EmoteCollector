@@ -26,6 +26,8 @@ from .errors import EmoteNotFoundError, TooLewdError
 from .. import utils
 from ..extensions.db import DatabaseEmote
 
+LINKED_EMOTE = r'(?a)\[(?P<name>\w{2,32})\]\(https://cdn\.discordapp\.com/emojis/(?P<id>\d{17,})\.(?P<extension>\w+)(?:\?v=1)?\)'
+
 class _MultiConverter(commands.Converter):
 	def __init__(self, *, converters=None):
 		self.converters = converters
@@ -200,14 +202,14 @@ class LoggedEmote(commands.Converter):
 		except IndexError:
 			raise commands.BadArgument(_('No embeds were found in that message.'))
 
-		m = re.match(utils.lexer.t_CUSTOM_EMOTE, embed.description)
+		m = re.match(LINKED_EMOTE, embed.description) or re.match(utils.lexer.t_CUSTOM_EMOTE, embed.description)
 		try:
 			return await ctx.bot.cogs['Database'].get_emote(m['name'])
 		except EmoteNotFoundError:
 			d = m.groupdict()
 			d['nsfw'] = 'MOD_NSFW'
 			d['id'] = int(d['id'])
-			d['animated'] = bool(d['animated'])
+			d['animated'] = d.get('extension') == 'gif' or bool(d.get('animated'))
 			return DatabaseEmote(d)
 
 # because MultiConverter does not support Union
