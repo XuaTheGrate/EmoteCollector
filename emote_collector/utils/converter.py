@@ -190,6 +190,11 @@ class Message(commands.Converter):
 		if not sender_permissions.external_emojis or not permissions.external_emojis:
 			raise commands.CheckFailure(_('Unable to react: you and I both need permission to use external emotes.'))
 
+LINKED_EMOTE = (
+	r'(?a)\[(?P<name>\w{2,32})\]\(https://cdn\.discordapp'
+	r'\.com/emojis/(?P<id>\d{17,})\.(?P<extension>\w+)(?:\?v=1)?\)'
+)
+
 class LoggedEmote(commands.Converter):
 	async def convert(self, ctx, argument):
 		message = await commands.converter.MessageConverter().convert(ctx, argument)
