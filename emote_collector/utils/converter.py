@@ -26,7 +26,6 @@ from .errors import EmoteNotFoundError, TooLewdError
 from .. import utils
 from ..extensions.db import DatabaseEmote
 
-LINKED_EMOTE = r'(?a)\[(?P<name>\w{2,32})\]\(https://cdn\.discordapp\.com/emojis/(?P<id>\d{17,})\.(?P<extension>\w+)(?:\?v=1)?\)'
 
 class _MultiConverter(commands.Converter):
 	def __init__(self, *, converters=None):
