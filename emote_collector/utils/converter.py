@@ -26,8 +26,6 @@ from .errors import EmoteNotFoundError, TooLewdError
 from .. import utils
 from ..extensions.db import DatabaseEmote
 
-LINKED_EMOTE = r'(?a)\[(?P<name>\w{2,32})\]\(https://cdn\.discordapp\.com/emojis/(?P<id>\d{17,})\.(?P<extension>\w+)(?:\?v=1)?\)'
-
 class _MultiConverter(commands.Converter):
 	def __init__(self, *, converters=None):
 		self.converters = converters
@@ -189,6 +187,11 @@ class Message(commands.Converter):
 			raise commands.CheckFailure(_('Unable to react: you and I both need permission to add reactions.'))
 		if not sender_permissions.external_emojis or not permissions.external_emojis:
 			raise commands.CheckFailure(_('Unable to react: you and I both need permission to use external emotes.'))
+
+LINKED_EMOTE = (
+	r'(?a)\[(?P<name>\w{2,32})\]\(https://cdn\.discordapp'
+	r'\.com/emojis/(?P<id>\d{17,})\.(?P<extension>\w+)(?:\?v=1)?\)'
+)
 
 class LoggedEmote(commands.Converter):
 	async def convert(self, ctx, argument):
